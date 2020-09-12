@@ -1,5 +1,7 @@
 # babel-plugin-transform-dynamic-imports-to-static-imports
 
+[![build](https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-imports-to-static-imports/workflows/build/badge.svg?branch=main)](https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-imports-to-static-imports/actions?query=branch%3Amain)
+
 > A transform to translate dynamic imports to static imports
 
 ## Installation:
