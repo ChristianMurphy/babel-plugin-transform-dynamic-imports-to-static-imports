@@ -18,9 +18,14 @@ pluginTester({
       output: 'import "./test";',
     },
     {
-      title: "dynamic import with dynamic path, cannot be made static",
+      title: "dynamic import with dynamic template path, cannot be made static",
       code: "import(`${tooDynamic}`);",
       output: "import(`${tooDynamic}`);",
+    },
+    {
+      title: "dynamic import with dynamic variable path, cannot be made static",
+      code: "import(tooDynamic);",
+      output: "import(tooDynamic);",
     },
     {
       title: "awaited dynamic import with global path",
@@ -87,14 +92,12 @@ pluginTester({
     {
       title: "dynamic import assigned to var",
       code: 'var test = import("test");',
-      output:
-        'import * as $$8 from "test";\nvar test = Promise.resolve($$8);',
+      output: 'import * as $$8 from "test";\nvar test = Promise.resolve($$8);',
     },
     {
       title: "dynamic import assigned to let",
       code: 'let test = import("test");',
-      output:
-        'import * as $$9 from "test";\nlet test = Promise.resolve($$9);',
+      output: 'import * as $$9 from "test";\nlet test = Promise.resolve($$9);',
     },
     {
       title: "dynamic import assigned to const",
@@ -119,6 +122,12 @@ pluginTester({
       code: 'const test = await import("test");',
       output:
         'import * as $$13 from "test";\nconst test = await Promise.resolve($$13);',
+    },
+    {
+      title: "dynamic import in for await of",
+      code: 'for await (plugin of [import("one"), import("two")]) {}',
+      output:
+        'import * as $$15 from "two";\nimport * as $$14 from "one";\n\nfor await (plugin of [Promise.resolve($$14), Promise.resolve($$15)]) {\n}',
     },
   ],
 });
