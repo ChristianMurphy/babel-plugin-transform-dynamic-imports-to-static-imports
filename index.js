@@ -1,7 +1,8 @@
 let counter = 0;
 
-export default function babelTransformDynamicImportsToStatics({ types: t }) {
+function babelTransformDynamicImportsToStaticImports({ types: t }) {
   return {
+    name: "transform-dynamic-imports-to-static-imports",
     visitor: {
       ExpressionStatement(path) {
         // handle `import("module-name")`
@@ -17,7 +18,7 @@ export default function babelTransformDynamicImportsToStatics({ types: t }) {
           );
           // prepend to program
           path
-            .findParent(path => path.isProgram())
+            .findParent((path) => path.isProgram())
             .node.body.unshift(staticImport);
           // remove dynamic import
           path.remove();
@@ -38,7 +39,7 @@ export default function babelTransformDynamicImportsToStatics({ types: t }) {
           );
           // prepend to program
           path
-            .findParent(path => path.isProgram())
+            .findParent((path) => path.isProgram())
             .node.body.unshift(staticImport);
           // remove dynamic import
           path.remove();
@@ -60,7 +61,7 @@ export default function babelTransformDynamicImportsToStatics({ types: t }) {
           );
           // prepend to program
           path
-            .findParent(path => path.isProgram())
+            .findParent((path) => path.isProgram())
             .node.body.unshift(staticImport);
           // replace `import("module-name").then`
           // with `Promise.resolve($$moduleId).then`
@@ -73,13 +74,16 @@ export default function babelTransformDynamicImportsToStatics({ types: t }) {
                 ),
                 [t.identifier(importIdentifier)]
               ),
-              t.identifier("then")
+              path.node.property
             )
           );
           counter++;
           return;
         }
-      }
-    }
+      },
+    },
   };
 }
+
+module.exports = babelTransformDynamicImportsToStaticImports;
+module.exports.default = babelTransformDynamicImportsToStaticImports;
