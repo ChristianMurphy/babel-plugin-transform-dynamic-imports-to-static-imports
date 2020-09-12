@@ -5,7 +5,6 @@ pluginTester({
   plugin: plugin,
   babelOptions: {
     plugins: [
-      "@babel/plugin-syntax-dynamic-import",
       "@babel/plugin-syntax-top-level-await",
     ],
   },
@@ -43,32 +42,38 @@ pluginTester({
     {
       title: "dynamic import chained with then",
       code: 'import("test").then(doSomething);',
-      output: 'import * as $$0 from "test";\nPromise.resolve($$0).then(doSomething);',
+      output:
+        'import * as $$0 from "test";\nPromise.resolve($$0).then(doSomething);',
     },
     {
       title: "dynamic import chained with catch",
       code: 'import("test").catch(doSomething);',
-      output: 'import * as $$1 from "test";\nPromise.resolve($$1).catch(doSomething);',
+      output:
+        'import * as $$1 from "test";\nPromise.resolve($$1).catch(doSomething);',
     },
     {
       title: "dynamic import chained with finally",
       code: 'import("test").finally(doSomething);',
-      output: 'import * as $$2 from "test";\nPromise.resolve($$2).finally(doSomething);',
+      output:
+        'import * as $$2 from "test";\nPromise.resolve($$2).finally(doSomething);',
     },
     {
       title: "awaited dynamic import chained with then",
       code: 'await import("test").then(doSomething);',
-      output: 'import * as $$3 from "test";\nawait Promise.resolve($$3).then(doSomething);',
+      output:
+        'import * as $$3 from "test";\nawait Promise.resolve($$3).then(doSomething);',
     },
     {
       title: "awaited dynamic import chained with catch",
       code: 'await import("test").catch(doSomething);',
-      output: 'import * as $$4 from "test";\nawait Promise.resolve($$4).catch(doSomething);',
+      output:
+        'import * as $$4 from "test";\nawait Promise.resolve($$4).catch(doSomething);',
     },
     {
       title: "awaited dynamic import chained with finally",
       code: 'await import("test").finally(doSomething);',
-      output: 'import * as $$5 from "test";\nawait Promise.resolve($$5).finally(doSomething);',
+      output:
+        'import * as $$5 from "test";\nawait Promise.resolve($$5).finally(doSomething);',
     },
   ],
 });
