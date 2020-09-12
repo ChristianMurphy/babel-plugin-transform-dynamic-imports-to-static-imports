@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-dynamic-imports-to-static-imports",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "transform dynamic import to static imports",
   "main": "index.js",
   "scripts": {
