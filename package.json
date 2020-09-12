@@ -1,0 +1,25 @@
+{
+  "name": "babel-plugin-transform-dynamic-import-to-static-import",
+  "version": "0.0.1",
+  "description": "transform dynamic import to static imports",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-import-to-static-import.git"
+  },
+  "keywords": [
+    "babel-plugin",
+    "import",
+    "static",
+    "dynamic"
+  ],
+  "author": "Christian Murphy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-import-to-static-import/issues"
+  },
+  "homepage": "https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-import-to-static-import#readme"
+}
