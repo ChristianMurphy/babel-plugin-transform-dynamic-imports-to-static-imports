@@ -4,9 +4,7 @@ const { default: plugin } = require("./index");
 pluginTester({
   plugin: plugin,
   babelOptions: {
-    plugins: [
-      "@babel/plugin-syntax-top-level-await",
-    ],
+    plugins: ["@babel/plugin-syntax-top-level-await"],
   },
   tests: [
     {
@@ -74,6 +72,53 @@ pluginTester({
       code: 'await import("test").finally(doSomething);',
       output:
         'import * as $$5 from "test";\nawait Promise.resolve($$5).finally(doSomething);',
+    },
+    {
+      title: "dynamic import in arrow function",
+      code: '() => import("test");',
+      output: 'import * as $$6 from "test";\n\n() => Promise.resolve($$6);',
+    },
+    {
+      title: "awaited dynamic import in arrow function",
+      code: 'async () => await import("test");',
+      output:
+        'import * as $$7 from "test";\n\nasync () => await Promise.resolve($$7);',
+    },
+    {
+      title: "dynamic import assigned to var",
+      code: 'var test = import("test");',
+      output:
+        'import * as $$8 from "test";\nvar test = Promise.resolve($$8);',
+    },
+    {
+      title: "dynamic import assigned to let",
+      code: 'let test = import("test");',
+      output:
+        'import * as $$9 from "test";\nlet test = Promise.resolve($$9);',
+    },
+    {
+      title: "dynamic import assigned to const",
+      code: 'const test = import("test");',
+      output:
+        'import * as $$10 from "test";\nconst test = Promise.resolve($$10);',
+    },
+    {
+      title: "awaited dynamic import assigned to var",
+      code: 'var test = await import("test");',
+      output:
+        'import * as $$11 from "test";\nvar test = await Promise.resolve($$11);',
+    },
+    {
+      title: "awaited dynamic import assigned to let",
+      code: 'let test = await import("test");',
+      output:
+        'import * as $$12 from "test";\nlet test = await Promise.resolve($$12);',
+    },
+    {
+      title: "awaited dynamic import assigned to const",
+      code: 'const test = await import("test");',
+      output:
+        'import * as $$13 from "test";\nconst test = await Promise.resolve($$13);',
     },
   ],
 });

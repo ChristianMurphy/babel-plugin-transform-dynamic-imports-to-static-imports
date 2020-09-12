@@ -4,82 +4,66 @@ function babelTransformDynamicImportsToStaticImports({ types: t }) {
   return {
     name: "transform-dynamic-imports-to-static-imports",
     visitor: {
-      ExpressionStatement(path) {
-        // handle `import("module-name")`
-        if (
-          t.isCallExpression(path.node.expression) &&
-          t.isImport(path.node.expression.callee) &&
-          t.isStringLiteral(path.node.expression.arguments[0])
-        ) {
-          // create static import
-          const staticImport = t.importDeclaration(
-            [],
-            t.stringLiteral(path.node.expression.arguments[0].value)
-          );
-          // prepend to program
+      Import(path) {
+        // ignore non-static paths
+        // for example import(`${dynamicPath}`)
+        if (!t.isStringLiteral(path.parent.arguments[0])) return;
+
+        // path from `import(path)`
+        const importPath = path.parent.arguments[0];
+
+        const wrappingPath = path.parentPath.parentPath;
+
+        // `import("path")` and `await import("path")`
+        const isErasableImport =
+          wrappingPath.isExpressionStatement() ||
+          (wrappingPath.isAwaitExpression() &&
+            wrappingPath.parentPath.isExpressionStatement());
+
+        // these imports can be added to the top of the file
+        // and removed from their current location
+        if (isErasableImport) {
+          // generate static import
+          // import "path"
+          const staticImport = t.importDeclaration([], importPath);
+
+          // add to beginning of program
           path
             .findParent((path) => path.isProgram())
             .node.body.unshift(staticImport);
-          // remove dynamic import
-          path.remove();
+
+          // remove the wrapping expression
+          path.parentPath.parentPath.remove();
           return;
         }
 
-        // handle `await import("module-name")`
-        if (
-          t.isAwaitExpression(path.node.expression) &&
-          t.isCallExpression(path.node.expression.argument) &&
-          t.isImport(path.node.expression.argument.callee) &&
-          t.isStringLiteral(path.node.expression.argument.arguments[0])
-        ) {
-          // create static import
-          const staticImport = t.importDeclaration(
-            [],
-            t.stringLiteral(path.node.expression.argument.arguments[0].value)
-          );
-          // prepend to program
-          path
-            .findParent((path) => path.isProgram())
-            .node.body.unshift(staticImport);
-          // remove dynamic import
-          path.remove();
-        }
-      },
-      MemberExpression(path) {
-        // handle `import("module-name").then()`
-        if (
-          t.isCallExpression(path.node.object) &&
-          t.isImport(path.node.object.callee) &&
-          t.isStringLiteral(path.node.object.arguments[0])
-        ) {
-          const importIdentifier = `\$\$${counter}`;
+        // generate an identifier for the import
+        // for example `import * as $$0 from 'path'`
+        const importIdentifier = `\$\$${counter}`;
 
-          // create static import
-          const staticImport = t.importDeclaration(
-            [t.importNamespaceSpecifier(t.identifier(importIdentifier))],
-            t.stringLiteral(path.node.object.arguments[0].value)
-          );
-          // prepend to program
-          path
-            .findParent((path) => path.isProgram())
-            .node.body.unshift(staticImport);
-          // replace `import("module-name").then`
-          // with `Promise.resolve($$moduleId).then`
-          path.replaceWith(
+        // generate static import expression
+        const staticImport = t.importDeclaration(
+          [t.importNamespaceSpecifier(t.identifier(importIdentifier))],
+          importPath
+        );
+
+        // add to beginning of program
+        path
+          .findParent((path) => path.isProgram())
+          .node.body.unshift(staticImport);
+        // replace `import("module-name")`
+        // with `Promise.resolve($$0)`
+        path.parentPath.replaceWith(
+          t.callExpression(
             t.memberExpression(
-              t.callExpression(
-                t.memberExpression(
-                  t.identifier("Promise"),
-                  t.identifier("resolve")
-                ),
-                [t.identifier(importIdentifier)]
-              ),
-              path.node.property
-            )
-          );
-          counter++;
-          return;
-        }
+              t.identifier("Promise"),
+              t.identifier("resolve")
+            ),
+            [t.identifier(importIdentifier)]
+          )
+        );
+        counter++;
+        return;
       },
     },
   };
