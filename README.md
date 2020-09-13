@@ -79,6 +79,8 @@ async function test() {
 }
 ```
 
+for more examples see [test.js](./test.js)
+
 ## Caveat
 
 dynamic imports with dynamic paths do not have a static equivalent.
@@ -114,3 +116,5 @@ async function test() {
   });
 }
 ```
+
+for more examples see [test.js](./test.js)
