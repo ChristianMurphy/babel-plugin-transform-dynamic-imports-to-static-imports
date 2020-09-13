@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-import-to-static-import.git"
   },
+  "files": [
+    "index.js"
+  ],
   "keywords": [
     "babel-plugin",
     "import",
