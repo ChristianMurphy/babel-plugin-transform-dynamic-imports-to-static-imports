@@ -129,5 +129,17 @@ pluginTester({
       output:
         'import * as $$15 from "two";\nimport * as $$14 from "one";\n\nfor await (plugin of [Promise.resolve($$14), Promise.resolve($$15)]) {\n}',
     },
+    {
+      title: "dynamic import in ternary",
+      code: 'condition ? import("test") : null',
+      output:
+        'import * as $$16 from "test";\ncondition ? Promise.resolve($$16) : null;',
+    },
+    {
+      title: "awaited dynamic import in ternary",
+      code: 'condition ? await import("test") : null',
+      output:
+        'import * as $$17 from "test";\ncondition ? await Promise.resolve($$17) : null;',
+    },
   ],
 });
