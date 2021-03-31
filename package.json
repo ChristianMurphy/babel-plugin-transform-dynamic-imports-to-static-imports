@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-syntax-top-level-await": "^7.0.0",
-    "babel-plugin-tester": "^9.0.0",
+    "babel-plugin-tester": "^10.0.0",
     "husky": "^6.0.0",
     "jest": "^26.0.0",
     "prettier": "^2.0.0"
