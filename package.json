@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ChristianMurphy/babel-plugin-transform-dynamic-import-to-static-import#readme",
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.13.14",
     "@babel/plugin-syntax-top-level-await": "^7.0.0",
     "babel-plugin-tester": "^10.0.0",
     "husky": "^6.0.0",
