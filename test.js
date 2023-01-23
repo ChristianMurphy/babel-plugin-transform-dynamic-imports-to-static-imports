@@ -1,5 +1,9 @@
-const { default: pluginTester } = require("babel-plugin-tester");
-const { default: plugin } = require("./index");
+const { describe, it } = require("node:test");
+const { pluginTester } = require("babel-plugin-tester");
+const plugin = require("./index.js");
+
+globalThis.describe = describe;
+globalThis.it = it;
 
 pluginTester({
   plugin: plugin,
@@ -81,13 +85,13 @@ pluginTester({
     {
       title: "dynamic import in arrow function",
       code: '() => import("test");',
-      output: 'import * as $$6 from "test";\n\n() => Promise.resolve($$6);',
+      output: 'import * as $$6 from "test";\n() => Promise.resolve($$6);',
     },
     {
       title: "awaited dynamic import in arrow function",
       code: 'async () => await import("test");',
       output:
-        'import * as $$7 from "test";\n\nasync () => await Promise.resolve($$7);',
+        'import * as $$7 from "test";\nasync () => await Promise.resolve($$7);',
     },
     {
       title: "dynamic import assigned to var",
@@ -127,7 +131,7 @@ pluginTester({
       title: "dynamic import in for await of",
       code: 'for await (plugin of [import("one"), import("two")]) {}',
       output:
-        'import * as $$15 from "two";\nimport * as $$14 from "one";\n\nfor await (plugin of [Promise.resolve($$14), Promise.resolve($$15)]) {\n}',
+        'import * as $$15 from "two";\nimport * as $$14 from "one";\nfor await (plugin of [Promise.resolve($$14), Promise.resolve($$15)]) {\n}',
     },
     {
       title: "dynamic import in ternary",
