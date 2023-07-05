@@ -33,6 +33,6 @@
     "@babel/plugin-syntax-top-level-await": "^7.0.0",
     "babel-plugin-tester": "^11.0.0",
     "husky": "^8.0.0",
-    "prettier": "^2.0.0"
+    "prettier": "^3.0.0"
   }
 }
